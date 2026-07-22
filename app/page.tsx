@@ -154,24 +154,27 @@ export default function Page() {
       padding: 0, 
       boxSizing: 'border-box', 
       fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-      position: 'relative'
+      position: 'relative',
+      overflowX: 'hidden'
     }}>
       
-      <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: 'clamp(32px, 5vw, 64px) clamp(24px, 5vw, 48px)', boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: 'clamp(20px, 4vw, 64px) clamp(16px, 4vw, 48px)', boxSizing: 'border-box' }}>
         
-        {/* HEADER */}
+        {/* HEADER RESPONSIVO */}
         <header style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center', 
-          marginBottom: '80px',
+          marginBottom: 'clamp(40px, 6vw, 80px)',
           borderBottom: '1px solid #e2e8f0',
-          paddingBottom: '28px'
+          paddingBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '16px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div style={{ 
-              width: '44px', 
-              height: '44px', 
+              width: '40px', 
+              height: '40px', 
               backgroundColor: '#0f172a', 
               color: '#ffffff', 
               borderRadius: '10px', 
@@ -179,7 +182,7 @@ export default function Page() {
               alignItems: 'center', 
               justifyContent: 'center', 
               fontWeight: 600,
-              fontSize: '18px'
+              fontSize: '16px'
             }}>
               G
             </div>
@@ -190,25 +193,26 @@ export default function Page() {
             </div>
           </div>
 
-          <nav style={{ display: 'flex', gap: '36px', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: '28px' }}>
-              <a href="#servicios" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Servicios</a>
-              <a href="#beneficios" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Ventajas</a>
-              <a href="#contacto" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Oficina</a>
+          <nav style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <a href="#servicios" style={{ fontSize: '14px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Servicios</a>
+              <a href="#beneficios" style={{ fontSize: '14px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Ventajas</a>
+              <a href="#contacto" style={{ fontSize: '14px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Oficina</a>
             </div>
             <a 
               href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera consultar por un trámite general.")}`} 
               target="_blank" 
               rel="noopener noreferrer" 
               style={{ 
-                fontSize: '14px', 
+                fontSize: '13px', 
                 fontWeight: 500, 
                 backgroundColor: '#0f172a', 
                 color: '#ffffff', 
-                padding: '12px 24px', 
+                padding: '10px 20px', 
                 borderRadius: '100px', 
                 textDecoration: 'none',
-                border: '1px solid #0f172a'
+                border: '1px solid #0f172a',
+                whiteSpace: 'nowrap'
               }}
             >
               Consulta Inmediata
@@ -216,64 +220,64 @@ export default function Page() {
           </nav>
         </header>
 
-        {/* HERO SECTION CON IMAGEN AL LADO */}
+        {/* HERO SECTION */}
         <section style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-          gap: '48px', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+          gap: '36px', 
           alignItems: 'center', 
-          marginBottom: '80px' 
+          marginBottom: 'clamp(60px, 8vw, 100px)' 
         }}>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 16px', borderRadius: '100px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', marginBottom: '28px' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#16a34a', display: 'inline-block' }} />
-              <span style={{ fontSize: '14px', color: '#0f172a', fontWeight: 500 }}>10+ años de experiencia · Córdoba</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '6px 14px', borderRadius: '100px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', marginBottom: '20px' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#16a34a', display: 'inline-block' }} />
+              <span style={{ fontSize: '13px', color: '#0f172a', fontWeight: 500 }}>10+ años de experiencia · Córdoba</span>
             </div>
 
             <h1 style={{ 
-              fontSize: 'clamp(36px, 5vw, 60px)', 
+              fontSize: 'clamp(32px, 4.5vw, 56px)', 
               fontWeight: 300, 
               letterSpacing: '-0.02em',
               lineHeight: 1.1, 
-              margin: '0 0 28px 0', 
+              margin: '0 0 20px 0', 
               color: '#0f172a'
             }}>
               Gestión judicial y trámites corporativos con agilidad real.
             </h1>
 
             <p style={{ 
-              fontSize: '18px', 
+              fontSize: 'clamp(15px, 2vw, 18px)', 
               color: '#475569', 
               lineHeight: 1.6, 
-              margin: '0 0 36px 0',
+              margin: '0 0 28px 0',
               fontWeight: 300
             }}>
               Aceleramos las gestiones de tu estudio jurídico o empresa con presentación presencial inmediata, seguimiento constante y cero demoras.
             </p>
 
-            <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
               <a href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera consultar por un trámite general.")}`} target="_blank" rel="noopener noreferrer" style={{ 
-                padding: '16px 32px', 
+                padding: '14px 26px', 
                 backgroundColor: '#0f172a', 
                 color: '#ffffff', 
                 border: '1px solid #0f172a',
                 borderRadius: '100px', 
-                fontSize: '15px', 
+                fontSize: '14px', 
                 fontWeight: 500, 
                 textDecoration: 'none',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '10px'
+                gap: '8px'
               }}>
                 Consultar por WhatsApp →
               </a>
               <a href="#servicios" style={{ 
-                padding: '16px 32px', 
+                padding: '14px 26px', 
                 backgroundColor: '#ffffff', 
                 color: '#0f172a', 
                 border: '1px solid #cbd5e1', 
                 borderRadius: '100px', 
-                fontSize: '15px', 
+                fontSize: '14px', 
                 fontWeight: 500, 
                 textDecoration: 'none' 
               }}>
@@ -282,15 +286,15 @@ export default function Page() {
             </div>
           </div>
 
-          {/* CONTENEDOR DE LA IMAGEN (Manos recibiendo documentación / sobre) */}
+          {/* CONTENEDOR DE LA IMAGEN */}
           <div style={{ 
             position: 'relative', 
-            borderRadius: '24px', 
+            borderRadius: '20px', 
             overflow: 'hidden', 
             border: '1px solid #cbd5e1',
             boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
             backgroundColor: '#f8fafc',
-            minHeight: '380px',
+            minHeight: '300px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -302,28 +306,28 @@ export default function Page() {
                 width: '100%', 
                 height: '100%', 
                 objectFit: 'cover',
-                minHeight: '380px',
+                minHeight: '300px',
                 display: 'block'
               }} 
             />
             <div style={{
               position: 'absolute',
-              bottom: '20px',
-              left: '20px',
-              right: '20px',
+              bottom: '16px',
+              left: '16px',
+              right: '16px',
               backgroundColor: 'rgba(15, 23, 42, 0.85)',
               backdropFilter: 'blur(8px)',
-              padding: '16px 20px',
-              borderRadius: '16px',
+              padding: '12px 16px',
+              borderRadius: '14px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
-              gap: '12px'
+              gap: '10px'
             }}>
-              <span style={{ fontSize: '20px' }}>📄</span>
+              <span style={{ fontSize: '18px' }}>📄</span>
               <div>
-                <p style={{ fontSize: '13px', margin: 0, fontWeight: 500, color: '#cbd5e1' }}>Atención personalizada</p>
-                <p style={{ fontSize: '14px', margin: 0, fontWeight: 600 }}>Diligenciamiento seguro y profesional</p>
+                <p style={{ fontSize: '12px', margin: 0, fontWeight: 500, color: '#cbd5e1' }}>Atención personalizada</p>
+                <p style={{ fontSize: '13px', margin: 0, fontWeight: 600 }}>Diligenciamiento seguro y profesional</p>
               </div>
             </div>
           </div>
@@ -332,48 +336,48 @@ export default function Page() {
         {/* BENEFICIOS */}
         <section id="beneficios" style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-          gap: '24px', 
-          marginBottom: '100px' 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
+          gap: '20px', 
+          marginBottom: 'clamp(60px, 8vw, 100px)' 
         }}>
-          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>01 / Presencia</span>
-            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Gestión diaria en Tribunales</h3>
-            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '28px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>01 / Presencia</span>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 10px 0', color: '#0f172a' }}>Gestión diaria en Tribunales</h3>
+            <p style={{ fontSize: '14px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
               Presentaciones físicas constantes en juzgados y reparticiones provinciales de Córdoba sin intermediarios lentos.
             </p>
           </div>
 
-          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>02 / Celeridad</span>
-            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Devolución inmediata</h3>
-            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '28px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>02 / Celeridad</span>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 10px 0', color: '#0f172a' }}>Devolución inmediata</h3>
+            <p style={{ fontSize: '14px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
               Envío rápido de constancias firmadas, cédulas diligenciadas y reportes claros directo a tu WhatsApp.
             </p>
           </div>
 
-          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>03 / Cobertura</span>
-            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Capital e Interior</h3>
-            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '28px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>03 / Cobertura</span>
+            <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 10px 0', color: '#0f172a' }}>Capital e Interior</h3>
+            <p style={{ fontSize: '14px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
               Capacidad logística instalada para cubrir tanto la ciudad de Córdoba como las principales jurisdicciones del interior.
             </p>
           </div>
         </section>
 
         {/* LISTADO DE SERVICIOS */}
-        <section id="servicios" style={{ marginBottom: '100px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '24px' }}>
+        <section id="servicios" style={{ marginBottom: 'clamp(60px, 8vw, 100px)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', flexWrap: 'wrap', gap: '20px' }}>
             <div>
-              <h2 style={{ fontSize: '40px', fontWeight: 400, margin: '0 0 8px 0', color: '#0f172a' }}>
+              <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 400, margin: '0 0 6px 0', color: '#0f172a' }}>
                 Nuestros Servicios
               </h2>
-              <p style={{ fontSize: '15px', color: '#64748b', margin: 0, fontWeight: 300 }}>
+              <p style={{ fontSize: '14px', color: '#64748b', margin: 0, fontWeight: 300 }}>
                 Hacé clic en cualquier trámite para ver la explicación detallada y los tiempos de demora.
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {['todos', 'judicial', 'registral', 'procesal', 'administrativo'].map((tab) => {
                 const isActive = activeTab === tab;
                 return (
@@ -381,12 +385,12 @@ export default function Page() {
                     key={tab}
                     onClick={() => handleTabChange(tab)}
                     style={{
-                      padding: '10px 20px',
+                      padding: '8px 16px',
                       borderRadius: '100px',
                       border: '1px solid #0f172a',
                       backgroundColor: isActive ? '#0f172a' : '#ffffff',
                       color: isActive ? '#ffffff' : '#0f172a',
-                      fontSize: '14px',
+                      fontSize: '13px',
                       fontWeight: 500,
                       cursor: 'pointer',
                       textTransform: 'capitalize'
@@ -399,7 +403,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minHeight: '520px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', minHeight: '480px' }}>
             {currentItems.map((service) => {
               return (
                 <div 
@@ -407,16 +411,17 @@ export default function Page() {
                   onClick={() => setSelectedService(service)}
                   style={{
                     border: '1px solid #cbd5e1',
-                    borderRadius: '20px',
-                    padding: '28px 36px',
+                    borderRadius: '18px',
+                    padding: '24px',
                     backgroundColor: '#ffffff',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
+                    alignItems: 'stretch',
                     cursor: 'pointer',
-                    gap: '24px',
+                    gap: '20px',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                    flexWrap: 'wrap'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#0f172a';
@@ -429,16 +434,16 @@ export default function Page() {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <div style={{ maxWidth: '75%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '11px', padding: '4px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div style={{ flex: '1 1 280px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '11px', padding: '3px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         {service.category}
                       </span>
                     </div>
-                    <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 6px 0', color: '#0f172a' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 6px 0', color: '#0f172a' }}>
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: '14px', color: '#475569', margin: '0 0 6px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: '14px', color: '#475569', margin: '0 0 8px 0', fontWeight: 300, lineHeight: 1.5 }}>
                       {service.description}
                     </p>
                     <p style={{ fontSize: '12px', color: '#16a34a', margin: 0, fontWeight: 500 }}>
@@ -449,14 +454,15 @@ export default function Page() {
                   <div style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '8px', 
-                    fontSize: '14px', 
+                    justifyContent: 'center',
+                    fontSize: '13px', 
                     fontWeight: 500, 
                     color: '#0f172a',
                     whiteSpace: 'nowrap',
                     backgroundColor: '#f1f5f9',
-                    padding: '12px 20px',
-                    borderRadius: '100px'
+                    padding: '10px 18px',
+                    borderRadius: '100px',
+                    alignSelf: 'center'
                   }}>
                     Ver Detalle +
                   </div>
@@ -467,7 +473,7 @@ export default function Page() {
 
           {/* PAGINACIÓN */}
           {totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '40px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '36px' }}>
               {Array.from({ length: totalPages }, (_, index) => {
                 const pageNumber = index + 1;
                 const isActive = currentPage === pageNumber;
@@ -476,13 +482,13 @@ export default function Page() {
                     key={pageNumber}
                     onClick={() => setCurrentPage(pageNumber)}
                     style={{
-                      width: '40px',
-                      height: '40px',
+                      width: '36px',
+                      height: '36px',
                       borderRadius: '50%',
                       border: '1px solid #0f172a',
                       backgroundColor: isActive ? '#0f172a' : '#ffffff',
                       color: isActive ? '#ffffff' : '#0f172a',
-                      fontSize: '14px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
@@ -513,35 +519,39 @@ export default function Page() {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 2000,
-          padding: '20px'
+          padding: '16px',
+          boxSizing: 'border-box'
         }}>
           <div style={{
             backgroundColor: '#ffffff',
-            borderRadius: '24px',
-            maxWidth: '560px',
+            borderRadius: '20px',
+            maxWidth: '520px',
             width: '100%',
-            padding: '40px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: 'clamp(24px, 4vw, 36px)',
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
             position: 'relative',
-            border: '1px solid #cbd5e1'
+            border: '1px solid #cbd5e1',
+            boxSizing: 'border-box'
           }}>
             {/* Botón Cerrar */}
             <button
               onClick={() => setSelectedService(null)}
               style={{
                 position: 'absolute',
-                top: '24px',
-                right: '24px',
+                top: '20px',
+                right: '20px',
                 background: '#f1f5f9',
                 border: 'none',
                 borderRadius: '50%',
-                width: '36px',
-                height: '36px',
+                width: '32px',
+                height: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 600,
                 color: '#0f172a'
               }}
@@ -549,29 +559,29 @@ export default function Page() {
               ✕
             </button>
 
-            <span style={{ fontSize: '11px', padding: '4px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block', marginBottom: '16px' }}>
+            <span style={{ fontSize: '11px', padding: '4px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block', marginBottom: '14px' }}>
               {selectedService.category}
             </span>
 
-            <h3 style={{ fontSize: '26px', fontWeight: 600, color: '#0f172a', margin: '0 0 12px 0' }}>
+            <h3 style={{ fontSize: '22px', fontWeight: 600, color: '#0f172a', margin: '0 0 10px 0' }}>
               {selectedService.title}
             </h3>
 
-            <div style={{ display: 'inline-block', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '8px 16px', borderRadius: '12px', marginBottom: '20px' }}>
-              <span style={{ fontSize: '14px', color: '#15803d', fontWeight: 600 }}>
+            <div style={{ display: 'inline-block', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '6px 14px', borderRadius: '10px', marginBottom: '18px' }}>
+              <span style={{ fontSize: '13px', color: '#15803d', fontWeight: 600 }}>
                 ⏱ Tiempo estimado de demora: {selectedService.tiempoDemora}
               </span>
             </div>
 
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', margin: '0 0 8px 0' }}>¿Cómo se realiza el trámite?</h4>
-              <p style={{ fontSize: '15px', color: '#475569', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#0f172a', margin: '0 0 6px 0' }}>¿Cómo se realiza el trámite?</h4>
+              <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
                 {selectedService.explicacionAmpliada}
               </p>
             </div>
 
-            <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '32px', border: '1px solid #e2e8f0' }}>
-              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, fontWeight: 300 }}>
+            <div style={{ backgroundColor: '#f8fafc', padding: '14px', borderRadius: '12px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: 0, fontWeight: 300 }}>
                 💡 <strong style={{ fontWeight: 500, color: '#0f172a' }}>Nota legal:</strong> {selectedService.detalle}
               </p>
             </div>
@@ -585,11 +595,11 @@ export default function Page() {
                   flex: 1,
                   backgroundColor: '#0f172a',
                   color: '#ffffff',
-                  padding: '14px 24px',
+                  padding: '12px 20px',
                   borderRadius: '100px',
                   textAlign: 'center',
                   textDecoration: 'none',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: 500
                 }}
               >
@@ -604,50 +614,50 @@ export default function Page() {
       <footer id="contacto" style={{ 
         borderTop: '1px solid #cbd5e1', 
         backgroundColor: '#f8fafc',
-        padding: '64px 0 32px 0'
+        padding: '50px 0 24px 0'
       }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 clamp(24px, 5vw, 48px)', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 clamp(16px, 4vw, 48px)', boxSizing: 'border-box' }}>
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-            gap: '48px', 
-            marginBottom: '56px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: '36px', 
+            marginBottom: '40px',
             alignItems: 'stretch'
           }}>
             <div style={{ 
               border: '1px solid #cbd5e1', 
-              borderRadius: '24px', 
-              padding: '40px', 
+              borderRadius: '20px', 
+              padding: '30px', 
               backgroundColor: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
             }}>
               <div>
-                <h3 style={{ fontSize: '24px', fontWeight: 600, margin: '0 0 24px 0', color: '#0f172a' }}>Oficina Córdoba</h3>
-                <p style={{ fontSize: '15px', color: '#334155', margin: '0 0 16px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 20px 0', color: '#0f172a' }}>Oficina Córdoba</h3>
+                <p style={{ fontSize: '14px', color: '#334155', margin: '0 0 12px 0', fontWeight: 300, lineHeight: 1.5 }}>
                   <strong style={{ fontWeight: 600, color: '#0f172a' }}>Dirección:</strong> Calle Linda 123, Ciudad de Córdoba
                 </p>
-                <p style={{ fontSize: '15px', color: '#334155', margin: '0 0 16px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '14px', color: '#334155', margin: '0 0 12px 0', fontWeight: 300, lineHeight: 1.5 }}>
                   <strong style={{ fontWeight: 600, color: '#0f172a' }}>Teléfono:</strong> 1234567890
                 </p>
-                <p style={{ fontSize: '15px', color: '#334155', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '14px', color: '#334155', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
                   <strong style={{ fontWeight: 600, color: '#0f172a' }}>Horario:</strong> Lun-Vie 8:30–14:30 | Lun-Jue 15:00–16:30
                 </p>
               </div>
 
-              <div style={{ marginTop: '32px' }}>
+              <div style={{ marginTop: '24px' }}>
                 <a 
                   href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera agendar una visita o consulta.")}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   style={{ 
                     display: 'inline-block',
-                    fontSize: '14px', 
+                    fontSize: '13px', 
                     fontWeight: 500, 
                     backgroundColor: '#0f172a', 
                     color: '#ffffff', 
-                    padding: '12px 24px', 
+                    padding: '10px 20px', 
                     borderRadius: '100px', 
                     textDecoration: 'none'
                   }}
@@ -659,10 +669,10 @@ export default function Page() {
 
             <div style={{ 
               border: '1px solid #cbd5e1', 
-              borderRadius: '24px', 
+              borderRadius: '20px', 
               overflow: 'hidden', 
               backgroundColor: '#ffffff',
-              minHeight: '300px',
+              minHeight: '260px',
               display: 'flex'
             }}>
               <iframe 
@@ -670,7 +680,7 @@ export default function Page() {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.9999999999995!2d-64.1888!3d-31.4201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI1JzEyLjQiUyA2NMKwMTEnMTkuNyJX!5e0!3m2!1ses!2sar!4v1650000000000!5m2!1ses!2sar" 
                 width="100%" 
                 height="100%" 
-                style={{ border: 0, minHeight: '320px', width: '100%' }} 
+                style={{ border: 0, minHeight: '260px', width: '100%' }} 
                 allowFullScreen={false} 
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade">
@@ -680,14 +690,14 @@ export default function Page() {
 
           <div style={{ 
             borderTop: '1px solid #cbd5e1', 
-            paddingTop: '32px', 
+            paddingTop: '24px', 
             display: 'flex', 
             justifyContent: 'space-between', 
-            fontSize: '14px', 
+            fontSize: '13px', 
             color: '#64748b', 
             fontWeight: 300,
             flexWrap: 'wrap', 
-            gap: '16px' 
+            gap: '12px' 
           }}>
             <p style={{ margin: 0 }}>© {new Date().getFullYear()} GESTOR — Todos los derechos reservados.</p>
             <p style={{ margin: 0 }}>Córdoba e Interior</p>
@@ -704,10 +714,10 @@ export default function Page() {
         aria-label="Consultar por WhatsApp"
         style={{
           position: 'fixed',
-          bottom: '32px',
-          right: '32px',
-          width: '56px',
-          height: '56px',
+          bottom: '24px',
+          right: '24px',
+          width: '50px',
+          height: '50px',
           backgroundColor: '#0f172a',
           color: '#ffffff',
           borderRadius: '50%',
@@ -728,7 +738,7 @@ export default function Page() {
           e.currentTarget.style.backgroundColor = '#0f172a';
         }}
       >
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
         </svg>
       </a>
