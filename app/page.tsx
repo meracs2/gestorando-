@@ -1,634 +1,738 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
-// Slider: Solo tus dos productos principales con imágenes locales
-const projects = [
+interface Service {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  detalle: string;
+  tiempoDemora: string;
+  explicacionAmpliada: string;
+}
+
+const servicesList: Service[] = [
   {
-    title: 'Ronin Bike',
-    description: 'Plataforma de e-commerce para ciclismo de alta gama con optimización SEO avanzada.',
-    href: 'https://ronin-bike.vercel.app',
-    image: '/ronin-bike.jpeg',
-    tech: 'Next.js, TypeScript, Tailwind CSS, Stripe',
-    accentColor: '#d97706',
-    problema: 'Las plataformas de e-commerce de ciclismo suelen ser pesadas debido a la alta resolución de las imágenes, lo que destruye el rendimiento móvil y el posicionamiento en Google (SEO).',
-    solucion: 'Desarrollé una arquitectura utilizando Next.js para renderizar el contenido desde el servidor (SSR), logrando una carga instantánea, optimizando imágenes dinámicamente y asegurando un flujo de pago con Stripe 100% seguro.'
+    id: 'cedulas',
+    title: 'Cédulas Ley 22.172',
+    category: 'Judicial',
+    description: 'Diligenciamiento profesional de cédulas y notificaciones con presentación directa en Tribunales de Córdoba.',
+    detalle: 'Optimización de plazos procesales, control exhaustivo de casilleros y devolución inmediata de constancias firmadas.',
+    tiempoDemora: '24 a 48 horas hábiles',
+    explicacionAmpliada: 'Nos encargamos de la recepción de la cédula, control de recaudaciones legales, presentación en la oficina de mandamientos y notificaciones o tribunal correspondiente, seguimiento diario y retiro de la copia diligenciada con sello oficial para su devolución.'
   },
   {
-    title: 'Urban Store',
-    description: 'Tienda digital enfocada en indumentaria urbana y una experiencia de usuario fluida.',
-    href: 'https://urban-store-xi.vercel.app',
-    image: '/urban-store.jpeg',
-    tech: 'React, Node.js, Express, MongoDB',
-    accentColor: '#2563eb',
-    problema: 'Las tiendas de ropa necesitan filtros rápidos por talle, color y categoría. En bases de datos mal optimizadas, cruzar estos datos ralentiza la carga y frustra la navegación.',
-    solucion: 'Creé una SPA con React para navegación fluida y diseñé una API REST con Node.js y MongoDB, modelando los datos de forma no relacional para que los filtros de productos se resuelvan en milisegundos.'
+    id: 'oficios',
+    title: 'Oficios y Mandamientos',
+    category: 'Judicial',
+    description: 'Gestión y trámite de oficios judiciales y mandamientos de ley interjurisdiccionales.',
+    detalle: 'Articulación directa con juzgados y dependencias para destrabar exhortos y mandamientos sin demoras.',
+    tiempoDemora: '48 a 72 horas hábiles',
+    explicacionAmpliada: 'Ideal para estudios de otras provincias o locales que necesitan presencialidad. Gestionamos la compulsa, libramientos, control de firmas autorizadas y diligenciamiento ante el organismo requerido.'
+  },
+  {
+    id: 'exhortos',
+    title: 'Exhortos y Rogatorias',
+    category: 'Procesal',
+    description: 'Coordinación y diligenciamiento integral de exhortos en la provincia.',
+    detalle: 'Seguimiento riguroso de la rogatoria desde su radicación hasta su total trámite y conclusión.',
+    tiempoDemora: '3 a 5 días hábiles',
+    explicacionAmpliada: 'Incluye la radicación del exhorto en el tribunal de destino en Córdoba, pago de tasas si corresponde, gestión del proveído y diligenciamiento de las medidas ordenadas.'
+  },
+  {
+    id: 'propiedad',
+    title: 'Registro de la Propiedad',
+    category: 'Registral',
+    description: 'Solicitud e inscripción de certificados de dominio, inhibiciones y minutas.',
+    detalle: 'Gestiones ágiles ante el RPI para asegurar que tus operaciones inmobiliarias no sufran trabas registrales.',
+    tiempoDemora: '24 a 72 horas (según urgencia)',
+    explicacionAmpliada: 'Presentación y retiro de rogatorias, solicitud de certificados e informes dominiales, inhibiciones y anotaciones personales ante el Registro General de la Provincia.'
+  },
+  {
+    id: 'automotor',
+    title: 'Registro Automotor',
+    category: 'Registral',
+    description: 'Informes de dominio, radicación, transferencias y trámites en seccionales.',
+    detalle: 'Asistencia y presentación express en registros del automotor con control previo de documentación.',
+    tiempoDemora: '24 a 48 horas',
+    explicacionAmpliada: 'Verificación de legajos, presentación de formularios 08, 02, 13, obtención de informes históricos de dominio y retiros de cédulas o títulos en seccionales.'
+  },
+  {
+    id: 'civiles',
+    title: 'Registros Civiles y ReNaPer',
+    category: 'Administrativo',
+    description: 'Obtención de partidas, certificados de nacimiento, matrimonio y defunción.',
+    detalle: 'Retiro y tramitación simplificada de documentación oficial con validez legal.',
+    tiempoDemora: '48 a 96 horas hábiles',
+    explicacionAmpliada: 'Búsqueda de actas y partidas en los distintos registros civiles provinciales, legalización de las mismas y envío digital o físico según necesidad.'
+  },
+  {
+    id: 'expedientes',
+    title: 'Procuración de Expedientes',
+    category: 'Judicial',
+    description: 'Monitoreo, compulsa y control periódico de causas judiciales y administrativas.',
+    detalle: 'Revisión periódica de estados procesales y retiro de copias o documentación en juzgados.',
+    tiempoDemora: '24 horas desde la solicitud',
+    explicacionAmpliada: 'Asistencia presencial al tribunal para revisar expedientes físicos, confronte de escritos, desglose de documentos y escaneo o extracción de copias completas.'
+  },
+  {
+    id: 'legalizaciones',
+    title: 'Legalizaciones y Apostillas',
+    category: 'Documentación',
+    description: 'Certificaciones, legalizaciones de firmas y apostillados para uso oficial.',
+    detalle: 'Validación de instrumentos públicos y privados mediante canales oficiales certificados.',
+    tiempoDemora: '2 a 4 días hábiles',
+    explicacionAmpliada: 'Gestión ante Colegios Profesionales, Tribunal Superior de Justicia y Cancillería para dotar a la documentación de validez interjurisdiccional o internacional.'
+  },
+  {
+    id: 'quiebras',
+    title: 'Inscripción de Concursos y Quiebras',
+    category: 'Judicial',
+    description: 'Publicación de edictos y diligenciamientos en fueros concursales.',
+    detalle: 'Gestión coordinada con martilleros y secretarías de juzgados intervinientes.',
+    tiempoDemora: '48 a 72 horas hábiles',
+    explicacionAmpliada: 'Diligenciamiento de publicaciones en Boletín Oficial, inscripción de inhibiciones generales de bienes en registros y notificações a sindicaturas.'
+  },
+  {
+    id: 'comercial',
+    title: 'Inspección de Personas Jurídicas (IPJ)',
+    category: 'Registral',
+    description: 'Trámites societarios, rúbrica de libros y presentaciones anuales.',
+    detalle: 'Asesoramiento y presentación formal de balances y documentación corporativa.',
+    tiempoDemora: '3 a 7 días hábiles',
+    explicacionAmpliada: 'Presentación de trámites ordinarios y extraordinarios, inscripción de autoridades, reformas estatutarias y rúbrica digital/presencial de libros contables y societarios.'
+  },
+  {
+    id: 'bancarios',
+    title: 'Oficios Bancarios y Trabas',
+    category: 'Judicial',
+    description: 'Diligenciamiento de embargos e informes de entidades financieras.',
+    detalle: 'Presentación de exhortos bancarios con estricta reserva y celeridad.',
+    tiempoDemora: '24 a 48 horas hábiles',
+    explicacionAmpliada: 'Presentación presencial o electrónica de medidas cautelares, oficios de informes de saldos y traba/levantamiento de embargos en casas centrales o sucursales bancarias.'
+  },
+  {
+    id: 'catastro',
+    title: 'Dirección General de Catastro',
+    category: 'Registral',
+    description: 'Certificados catastrales, mensuras y visaciones provinciales.',
+    detalle: 'Control técnico y gestión documental ante reparticiones catastrales.',
+    tiempoDemora: '3 a 5 días hábiles',
+    explicacionAmpliada: 'Solicitud de certificados catastrales provinciales, presentación de planos de mensura y seguimiento de expedientes técnicos ante la DGC.'
   }
 ];
 
-// Grilla: El Portafolio activo + Proyectos en desarrollo con el mismo formato del slider
-const gridProjects = [
-  {
-    id: 'portfolio',
-    title: 'AMsolutions | Portafolio',
-    description: 'Mi carta de presentación interactiva y profesional diseñada para una navegación ultra veloz.',
-    href: 'https://marcelomoyano.vercel.app',
-    tech: 'Next.js, React, Tailwind CSS, Vercel',
-    accentColor: '#10b981', 
-    problema: 'Los portafolios modernos suelen abusar de animaciones pesadas y frameworks sobredimensionados, lo que espanta a clientes potenciales que buscan respuestas rápidas.',
-    solucion: 'Diseñé una interfaz minimalista y brutalista súper optimizada, estructurando el contenido para lectura escaneable y utilizando Next.js para asegurar una carga por debajo del segundo.',
-    isLive: true,
-    showLiveButton: false 
-  },
-  {
-    id: 'beta',
-    title: 'Proyecto Beta',
-    description: 'Desarrollo y testing de una arquitectura basada en microservicios independientes.',
-    href: '#',
-    tech: 'Go, Docker, gRPC, PostgreSQL',
-    accentColor: '#6b7280',
-    problema: 'Mantener un monolito gigante suele volver inestable cualquier plataforma a medida que escala el tráfico o se agregan nuevas funcionalidades.',
-    solucion: 'Estructurando una API Gateway que distribuya las peticiones de forma balanceada hacia microservicios desacoplados escritos en Go, asegurando tolerancia a fallos.',
-    isLive: false,
-    showLiveButton: false
-  },
-  {
-    id: 'saas',
-    title: 'SaaS Platform',
-    description: 'Planteo de arquitectura e integraciones completas de software como servicio (SaaS).',
-    href: '#',
-    tech: 'Next.js, Supabase, Stripe, Tailwind',
-    accentColor: '#6b7280',
-    problema: 'La gestión de suscripciones recurrentes, roles de usuarios y bases de datos seguras suele requerir meses de desarrollo e integraciones complejas.',
-    solucion: 'Diseñando un boiler-plate escalable utilizando Supabase para autenticación/BBDD en tiempo real y webhooks de Stripe para automatizar el ciclo de facturación.',
-    isLive: false,
-    showLiveButton: false
-  }
-];
+export default function Page() {
+  const [activeTab, setActiveTab] = useState('todos');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const itemsPerPage = 6;
 
-export default function Portfolio() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const [openGridProject, setOpenGridProject] = useState<string | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const whatsappPhone = "1234567890"; 
 
-  const dragStartX = useRef(0);
-  const isDragging = useRef(false);
+  const filteredServices = activeTab === 'todos' 
+    ? servicesList 
+    : servicesList.filter(s => s.category.toLowerCase() === activeTab.toLowerCase());
 
-  const resetTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (!isOpen) {
-      timerRef.current = setInterval(() => {
-        setActiveIndex((current) => (current + 1) % projects.length);
-      }, 10000);
-    }
-  };
+  const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredServices.slice(startIndex, startIndex + itemsPerPage);
 
-  useEffect(() => {
-    if (isOpen) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
-    timerRef.current = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % projects.length);
-    }, 10000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleNext = () => {
-    setActiveIndex((current) => (current + 1) % projects.length);
-    resetTimer();
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((current) => (current - 1 + projects.length) % projects.length);
-    resetTimer();
-  };
-
-  const handleSelect = (index: number) => {
-    setActiveIndex(index);
-    resetTimer();
-  };
-
-  const handleDragStart = (clientX: number) => {
-    dragStartX.current = clientX;
-    isDragging.current = true;
-  };
-
-  const handleDragMove = (clientX: number) => {
-    if (!isDragging.current) return;
-    const diffX = clientX - dragStartX.current;
-    if (diffX > 80) {
-      handlePrev();
-      isDragging.current = false;
-    } else if (diffX < -80) {
-      handleNext();
-      isDragging.current = false;
-    }
-  };
-
-  const handleDragEnd = () => {
-    isDragging.current = false;
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const toggleGridProject = (id: string) => {
-    setOpenGridProject(current => current === id ? null : id);
-  };
-
-  const emailAsunto = encodeURIComponent("Consulta sobre desarrollo web - AMsolutions");
-  const emailCuerpo = encodeURIComponent("¡Hola Marcelo!\n\nMe pongo en contacto con vos para consultarte sobre un proyecto...\n\n[Escribí tu consulta acá]\n\nSaludos.");
-  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=amsolutions.studio@gmail.com&su=${emailAsunto}&body=${emailCuerpo}`;
-
-  const navLinkStyle = {
-    fontSize: '13px',
-    fontWeight: '500',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.12em',
-    color: 'var(--accent, #9ca3af)', 
-    textDecoration: 'none',
-    transition: 'opacity 0.2s ease'
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
   };
 
   return (
-    <div 
-      className="portfolio-root" 
-      style={{ 
-        userSelect: 'none', 
-        WebkitUserSelect: 'none',
-        minHeight: '100vh',
-        boxSizing: 'border-box',
-        background: 'var(--bg-verde-salvia, #222924)', 
-        color: 'var(--text, #eef1ed)',
-        padding: '40px 24px'
-      }}
-    >
-      <main className="portfolio-shell" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <div style={{ 
+      backgroundColor: '#ffffff', 
+      color: '#0f172a', 
+      minHeight: '100vh', 
+      width: '100%', 
+      margin: 0, 
+      padding: 0, 
+      boxSizing: 'border-box', 
+      fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+      position: 'relative'
+    }}>
+      
+      <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: 'clamp(32px, 5vw, 64px) clamp(24px, 5vw, 48px)', boxSizing: 'border-box' }}>
         
-        {/* CABECERA */}
-        <header className="intro-section" style={{ marginTop: '20px' }}>
-          <h1 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 'min(90px, 10vw)',
-            fontWeight: '700',
-            letterSpacing: '-0.02em',
-            marginBottom: '0px',
-            lineHeight: '0.9',
-            display: 'inline-block',
-            WebkitFontSmoothing: 'antialiased',
-            MozOsxFontSmoothing: 'grayscale'
-          }}>
-            AMsolutions
-          </h1>
-          
-          <p className="subtitle" style={{
-            fontSize: '12px', 
-            fontWeight: '400',
-            textTransform: 'none',
-            letterSpacing: '0.08em',
-            marginBottom: '16px',
-            marginTop: '12px',
-            display: 'block',
-            color: 'var(--accent, #9ca3af)'
-          }}>
-            Digital craft by Marcelo Hernán Moyano Crespo
-          </p>
-
-          <p className="lead-paragraph" style={{ marginTop: '0px', marginBottom: '24px', maxWidth: '600px', fontSize: '15px', lineHeight: '1.5', color: 'var(--accent, #9ca3af)' }}>
-            Arquitectura web centrada en el rendimiento puro. Convertimos su visión en código sólido, eliminando la complejidad para que cada proyecto funcione sin fricción.
-          </p>
-
-          <nav className="navbar" style={{ 
-            position: 'relative', 
-            width: '100%', 
-            padding: '24px 0px', 
-            borderTop: '1px solid rgba(243, 244, 246, 0.1)', 
-            borderBottom: '1px solid rgba(243, 244, 246, 0.1)', 
-            display: 'flex',
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            marginBottom: '64px', 
-            marginTop: '24px',
-            boxSizing: 'border-box'
-          }}>
-            <div className="navbar-links-left" style={{ display: 'flex', gap: '24px' }}>
-              <a href="#about" className="navbar-link" style={navLinkStyle}>Sobre mí</a>
-              <a href="#otros-proyectos" className="navbar-link" style={navLinkStyle}>Proyectos</a>
-              <a href="#contacto" className="navbar-link" style={navLinkStyle}>Contacto</a>
+        {/* HEADER */}
+        <header style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '80px',
+          borderBottom: '1px solid #e2e8f0',
+          paddingBottom: '28px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ 
+              width: '44px', 
+              height: '44px', 
+              backgroundColor: '#0f172a', 
+              color: '#ffffff', 
+              borderRadius: '10px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              fontWeight: 600,
+              fontSize: '18px'
+            }}>
+              G
             </div>
-
-            <div className="navbar-links-right" style={{ display: 'flex', gap: '24px' }}>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="navbar-link" style={navLinkStyle}>GitHub</a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="navbar-link" style={navLinkStyle}>LinkedIn</a>
+            <div>
+              <span style={{ fontSize: '18px', fontWeight: 600, color: '#0f172a', letterSpacing: '0.05em' }}>
+                GEST<span style={{ fontWeight: 300, color: '#64748b' }}>OR</span>
+              </span>
             </div>
+          </div>
+
+          <nav style={{ display: 'flex', gap: '36px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '28px' }}>
+              <a href="#servicios" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Servicios</a>
+              <a href="#beneficios" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Ventajas</a>
+              <a href="#contacto" style={{ fontSize: '15px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}>Oficina</a>
+            </div>
+            <a 
+              href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera consultar por un trámite general.")}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              style={{ 
+                fontSize: '14px', 
+                fontWeight: 500, 
+                backgroundColor: '#0f172a', 
+                color: '#ffffff', 
+                padding: '12px 24px', 
+                borderRadius: '100px', 
+                textDecoration: 'none',
+                border: '1px solid #0f172a'
+              }}
+            >
+              Consulta Inmediata
+            </a>
           </nav>
         </header>
 
-        {/* SECCIÓN DE PROYECTOS DESTACADOS */}
-        <section id="proyectos" className="projects-section" style={{ marginBottom: '80px', position: 'relative' }}>
-          <h2 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '14px',
-            fontWeight: '300',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginBottom: '16px'
-          }}>
-            Proyectos destacados
-          </h2>
-
-          <div style={{ position: 'relative', width: '100%' }}>
-            {/* Dots */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '24px', width: '100%' }}>
-              {projects.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSelect(index)}
-                  style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    border: 'none',
-                    background: activeIndex === index ? 'var(--text, #eef1ed)' : 'rgba(255, 255, 255, 0.2)',
-                    cursor: 'pointer',
-                    padding: 0,
-                    transition: 'background 0.3s, transform 0.3s',
-                    transform: activeIndex === index ? 'scale(1.2)' : 'scale(1)'
-                  }}
-                  title={`Ver proyecto ${index + 1}`}
-                />
-              ))}
+        {/* HERO SECTION CON IMAGEN AL LADO */}
+        <section style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
+          gap: '48px', 
+          alignItems: 'center', 
+          marginBottom: '80px' 
+        }}>
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 16px', borderRadius: '100px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', marginBottom: '28px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#16a34a', display: 'inline-block' }} />
+              <span style={{ fontSize: '14px', color: '#0f172a', fontWeight: 500 }}>10+ años de experiencia · Córdoba</span>
             </div>
-            
-            {/* Wrapper del slider (adaptación de altura dinámica) */}
-            <div className="slides-wrapper" style={{ position: 'relative', width: '100%', height: 'auto' }}>
-              {projects.map((project, index) => {
-                const isActive = index === activeIndex;
+
+            <h1 style={{ 
+              fontSize: 'clamp(36px, 5vw, 60px)', 
+              fontWeight: 300, 
+              letterSpacing: '-0.02em',
+              lineHeight: 1.1, 
+              margin: '0 0 28px 0', 
+              color: '#0f172a'
+            }}>
+              Gestión judicial y trámites corporativos con agilidad real.
+            </h1>
+
+            <p style={{ 
+              fontSize: '18px', 
+              color: '#475569', 
+              lineHeight: 1.6, 
+              margin: '0 0 36px 0',
+              fontWeight: 300
+            }}>
+              Aceleramos las gestiones de tu estudio jurídico o empresa con presentación presencial inmediata, seguimiento constante y cero demoras.
+            </p>
+
+            <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
+              <a href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera consultar por un trámite general.")}`} target="_blank" rel="noopener noreferrer" style={{ 
+                padding: '16px 32px', 
+                backgroundColor: '#0f172a', 
+                color: '#ffffff', 
+                border: '1px solid #0f172a',
+                borderRadius: '100px', 
+                fontSize: '15px', 
+                fontWeight: 500, 
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                Consultar por WhatsApp →
+              </a>
+              <a href="#servicios" style={{ 
+                padding: '16px 32px', 
+                backgroundColor: '#ffffff', 
+                color: '#0f172a', 
+                border: '1px solid #cbd5e1', 
+                borderRadius: '100px', 
+                fontSize: '15px', 
+                fontWeight: 500, 
+                textDecoration: 'none' 
+              }}>
+                Ver Servicios
+              </a>
+            </div>
+          </div>
+
+          {/* CONTENEDOR DE LA IMAGEN (Manos recibiendo documentación / sobre) */}
+          <div style={{ 
+            position: 'relative', 
+            borderRadius: '24px', 
+            overflow: 'hidden', 
+            border: '1px solid #cbd5e1',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
+            backgroundColor: '#f8fafc',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <img 
+              src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" 
+              alt="Gestión de trámites profesionales y entrega de documentación" 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover',
+                minHeight: '380px',
+                display: 'block'
+              }} 
+            />
+            <div style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '20px',
+              right: '20px',
+              backgroundColor: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(8px)',
+              padding: '16px 20px',
+              borderRadius: '16px',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <span style={{ fontSize: '20px' }}>📄</span>
+              <div>
+                <p style={{ fontSize: '13px', margin: 0, fontWeight: 500, color: '#cbd5e1' }}>Atención personalizada</p>
+                <p style={{ fontSize: '14px', margin: 0, fontWeight: 600 }}>Diligenciamiento seguro y profesional</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* BENEFICIOS */}
+        <section id="beneficios" style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+          gap: '24px', 
+          marginBottom: '100px' 
+        }}>
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>01 / Presencia</span>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Gestión diaria en Tribunales</h3>
+            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+              Presentaciones físicas constantes en juzgados y reparticiones provinciales de Córdoba sin intermediarios lentos.
+            </p>
+          </div>
+
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>02 / Celeridad</span>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Devolución inmediata</h3>
+            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+              Envío rápido de constancias firmadas, cédulas diligenciadas y reportes claros directo a tu WhatsApp.
+            </p>
+          </div>
+
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '24px', padding: '36px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>03 / Cobertura</span>
+            <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 12px 0', color: '#0f172a' }}>Capital e Interior</h3>
+            <p style={{ fontSize: '15px', color: '#475569', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+              Capacidad logística instalada para cubrir tanto la ciudad de Córdoba como las principales jurisdicciones del interior.
+            </p>
+          </div>
+        </section>
+
+        {/* LISTADO DE SERVICIOS */}
+        <section id="servicios" style={{ marginBottom: '100px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '24px' }}>
+            <div>
+              <h2 style={{ fontSize: '40px', fontWeight: 400, margin: '0 0 8px 0', color: '#0f172a' }}>
+                Nuestros Servicios
+              </h2>
+              <p style={{ fontSize: '15px', color: '#64748b', margin: 0, fontWeight: 300 }}>
+                Hacé clic en cualquier trámite para ver la explicación detallada y los tiempos de demora.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {['todos', 'judicial', 'registral', 'procesal', 'administrativo'].map((tab) => {
+                const isActive = activeTab === tab;
                 return (
-                  <div 
-                    key={project.title} 
-                    className={`project-card ${isActive ? 'active' : ''}`}
+                  <button
+                    key={tab}
+                    onClick={() => handleTabChange(tab)}
                     style={{
-                      display: isActive ? 'block' : 'none',
-                      position: 'relative',
-                      width: '100%'
+                      padding: '10px 20px',
+                      borderRadius: '100px',
+                      border: '1px solid #0f172a',
+                      backgroundColor: isActive ? '#0f172a' : '#ffffff',
+                      color: isActive ? '#ffffff' : '#0f172a',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      textTransform: 'capitalize'
                     }}
                   >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', textAlign: 'center' }}>
-                      
-                      <div 
-                        className="preview-box" 
-                        onMouseDown={(e) => handleDragStart(e.clientX)}
-                        onMouseMove={(e) => handleDragMove(e.clientX)}
-                        onMouseUp={handleDragEnd}
-                        onMouseLeave={handleDragEnd}
-                        onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
-                        onTouchMove={(e) => handleDragMove(e.touches[0].clientX)}
-                        onTouchEnd={handleDragEnd}
-                        style={{ 
-                          borderRadius: '16px', 
-                          overflow: 'hidden', 
-                          width: '100%', 
-                          maxWidth: '520px', 
-                          aspectRatio: '16 / 10', 
-                          background: 'rgba(255, 255, 255, 0.05)', 
-                          margin: '0 auto',
-                          cursor: 'grab',
-                          userSelect: 'none',
-                          WebkitUserSelect: 'none'
-                        }}
-                      >
-                        <img 
-                          src={project.image}
-                          alt={project.title} 
-                          className="preview-image"
-                          loading="lazy"
-                          draggable="false" 
-                          style={{ borderRadius: '16px', width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
-                        />
-                      </div>
-                      
-                      <div style={{ width: '100%', maxWidth: '520px', margin: '0 auto', textAlign: 'left' }}>
-                        <h3 style={{ fontSize: '24px', marginTop: '0', marginBottom: '8px' }}>{project.title}</h3>
-                        <p style={{ color: 'var(--accent, #9ca3af)', fontSize: '14px', marginBottom: '12px' }}>{project.description}</p>
-                        
-                        <button 
-                          onClick={() => setIsOpen(!isOpen)} 
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'var(--text, #eef1ed)',
-                            fontWeight: '600',
-                            fontSize: '12px',
-                            cursor: 'pointer',
-                            padding: '4px 0',
-                            textDecoration: 'underline',
-                            marginBottom: '16px',
-                            display: 'block'
-                          }}
-                        >
-                          {isOpen ? 'Ocultar detalles técnicos ↑' : 'Ver detalles técnicos ↓'}
-                        </button>
-
-                        <div style={{
-                          maxHeight: isOpen ? '350px' : '0px',
-                          overflow: 'hidden',
-                          transition: 'max-height 0.35s ease',
-                          fontSize: '13px',
-                          color: 'var(--text, #eef1ed)',
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          padding: isOpen ? '16px' : '0 16px',
-                          borderRadius: '8px',
-                          marginBottom: '16px'
-                        }}>
-                          <p style={{ marginBottom: '8px' }}><strong>El Desafío:</strong> {project.problema}</p>
-                          <p style={{ marginBottom: '12px' }}><strong>La Solución:</strong> {project.solucion}</p>
-                          <a 
-                            href={project.href} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            style={{
-                              display: 'inline-block',
-                              background: '#eef1ed',
-                              color: '#222924',
-                              padding: '6px 12px',
-                              borderRadius: '6px',
-                              textDecoration: 'none',
-                              fontWeight: '500'
-                            }}
-                          >
-                            Visitar Sitio Oficial
-                          </a>
-                        </div>
-
-                        <div style={{ borderLeftColor: project.accentColor, borderLeftWidth: '2px', borderLeftStyle: 'solid', paddingLeft: '12px', marginTop: '12px' }}>
-                          <span style={{ fontWeight: '600' }}>Stack:</span> {project.tech}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    {tab}
+                  </button>
                 );
               })}
             </div>
           </div>
-        </section>
 
-        {/* SECCIÓN SOBRE MÍ */}
-        <section id="about" style={{ padding: '48px 0', borderTop: '1px solid rgba(243, 244, 246, 0.1)', marginBottom: '80px' }}>
-          <h2 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '14px',
-            fontWeight: '300',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginBottom: '32px'
-          }}>
-            Sobre mí
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'start' }}>
-            <div style={{ fontSize: '15px', lineHeight: '1.6', color: 'var(--text, #eef1ed)' }}>
-              <p style={{ marginBottom: '16px' }}>
-                ¡Hola! Soy Marcelo Hernán Moyano Crespo, el desarrollador detrás de AMsolutions. Me apasiona construir productos digitales que no solo se vean bien, sino que vuelen en rendimiento y usabilidad.
-              </p>
-              <p style={{ marginBottom: '16px' }}>
-                Mi enfoque combina una profunda dedicación a la optimización de código con un diseño limpio y funcional. Creo firmemente que un buen software es aquel que resuelve problemas complejos de forma imperceptible y agradable para el usuario.
-              </p>
-              <p>
-                Cuando no estoy escribiendo código, estoy explorando nuevas arquitecturas, refinando interfaces de usuario, o buscando formas de exprimir cada milisegundo en la velocidad de carga de una página.
-              </p>
-            </div>
-
-            <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Core Tech Stack
-              </h3>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px' }}>
-                <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '8px' }}>
-                  <strong>Frontend:</strong> <span>React, Next.js, TypeScript</span>
-                </li>
-                <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '8px' }}>
-                  <strong>Backend:</strong> <span>Node.js, Express, REST APIs</span>
-                </li>
-                <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '8px' }}>
-                  <strong>BBDD:</strong> <span>MongoDB, PostgreSQL</span>
-                </li>
-                <li style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '4px' }}>
-                  <strong>Herramientas:</strong> <span>Git, Docker, Vercel, Stripe</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* GRILLA DE OTROS PROYECTOS */}
-        <section id="otros-proyectos" style={{ padding: '48px 0', borderTop: '1px solid rgba(243, 244, 246, 0.1)', marginBottom: '80px' }}>
-          <h2 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '14px',
-            fontWeight: '300',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginBottom: '32px'
-          }}>
-            Otros Proyectos y Lanzamientos
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
-            {gridProjects.map((project) => {
-              const isItemOpen = openGridProject === project.id;
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minHeight: '520px' }}>
+            {currentItems.map((service) => {
               return (
                 <div 
-                  key={project.id} 
-                  style={{ 
-                    background: 'rgba(255, 255, 255, 0.015)',
-                    borderRadius: '16px',
-                    padding: '24px',
-                    border: project.isLive ? '1px solid rgba(16, 185, 129, 0.3)' : '1px dashed rgba(255, 255, 255, 0.15)',
+                  key={service.id}
+                  onClick={() => setSelectedService(service)}
+                  style={{
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '20px',
+                    padding: '28px 36px',
+                    backgroundColor: '#ffffff',
                     display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px'
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    gap: '24px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#0f172a';
+                    e.currentTarget.style.backgroundColor = '#f8fafc';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#cbd5e1';
+                    e.currentTarget.style.backgroundColor = '#ffffff';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <div style={{ borderRadius: '12px', overflow: 'hidden', width: '100%', aspectRatio: '16 / 10', background: 'rgba(255, 255, 255, 0.05)', position: 'relative' }}>
-                    {project.isLive ? (
-                      <img src={`https://api.microlink.io?url=${encodeURIComponent(project.href)}&screenshot=true&meta=false&embed=screenshot.url`} alt={project.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'rgba(255, 255, 255, 0.35)', fontSize: '13px', gap: '8px' }}>
-                        <span style={{ fontSize: '24px' }}>⚙️</span>
-                        <span>Próximamente en producción</span>
-                      </div>
-                    )}
+                  <div style={{ maxWidth: '75%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '11px', padding: '4px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {service.category}
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 6px 0', color: '#0f172a' }}>
+                      {service.title}
+                    </h3>
+                    <p style={{ fontSize: '14px', color: '#475569', margin: '0 0 6px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                      {service.description}
+                    </p>
+                    <p style={{ fontSize: '12px', color: '#16a34a', margin: 0, fontWeight: 500 }}>
+                      ⏱ Demora estimada: {service.tiempoDemora}
+                    </p>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <h3 style={{ fontSize: '18px', margin: 0, fontWeight: '600' }}>{project.title}</h3>
-                      {project.isLive && (
-                        <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', padding: '2px 6px', borderRadius: '12px', fontWeight: '700', textTransform: 'uppercase' }}>Live</span>
-                      )}
-                    </div>
-                    
-                    <p style={{ color: 'var(--accent, #9ca3af)', fontSize: '13px', marginBottom: '12px', lineHeight: '1.4', flexGrow: 1 }}>{project.description}</p>
-
-                    <button 
-                      onClick={() => toggleGridProject(project.id)} 
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--text, #eef1ed)',
-                        fontWeight: '600',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        padding: '4px 0',
-                        textDecoration: 'underline',
-                        marginBottom: '12px',
-                        textAlign: 'left',
-                        display: 'block',
-                        width: 'fit-content'
-                      }}
-                    >
-                      {isItemOpen ? 'Ocultar detalles técnicos ↑' : 'Ver detalles técnicos ↓'}
-                    </button>
-
-                    <div style={{
-                      maxHeight: isItemOpen ? '350px' : '0px',
-                      overflow: 'hidden',
-                      transition: 'max-height 0.35s ease',
-                      fontSize: '13px',
-                      color: 'var(--text, #eef1ed)',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      padding: isItemOpen ? '12px' : '0 12px',
-                      borderRadius: '8px',
-                      marginBottom: '12px'
-                    }}>
-                      <p style={{ marginBottom: '8px' }}><strong>El Desafío:</strong> {project.problema}</p>
-                      <p style={{ marginBottom: '12px' }}><strong>La Solución:</strong> {project.solucion}</p>
-                      
-                      {project.isLive && project.showLiveButton !== false && (
-                        <a href={project.href} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#eef1ed', color: '#222924', padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500', fontSize: '12px' }}>Visitar Sitio Live</a>
-                      )}
-                    </div>
-
-                    <div style={{ borderLeftColor: project.accentColor, borderLeftWidth: '2px', borderLeftStyle: 'solid', paddingLeft: '12px', marginTop: 'auto', fontSize: '12px' }}>
-                      <span style={{ fontWeight: '600' }}>Stack:</span> {project.tech}
-                    </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px', 
+                    fontSize: '14px', 
+                    fontWeight: 500, 
+                    color: '#0f172a',
+                    whiteSpace: 'nowrap',
+                    backgroundColor: '#f1f5f9',
+                    padding: '12px 20px',
+                    borderRadius: '100px'
+                  }}>
+                    Ver Detalle +
                   </div>
                 </div>
               );
             })}
           </div>
-        </section>
 
-        {/* FOOTER */}
-        <footer id="contacto" style={{ 
-          marginTop: '80px', 
-          paddingTop: '32px', 
-          borderTop: '1px solid rgba(243, 244, 246, 0.1)',
+          {/* PAGINACIÓN */}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '40px' }}>
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+                const isActive = currentPage === pageNumber;
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '1px solid #0f172a',
+                      backgroundColor: isActive ? '#0f172a' : '#ffffff',
+                      color: isActive ? '#ffffff' : '#0f172a',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* VENTANA DINÁMICA / MODAL FLOTANTE */}
+      {selectedService && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(4px)',
           display: 'flex',
-          flexDirection: 'column',
-          gap: '32px',
-          width: '100%'
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '20px'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', width: '100%' }}>
-            <div style={{ margin: '0 auto' }}>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: '500' }}>¿Tenés una idea o proyecto en mente?</p>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '24px',
+            maxWidth: '560px',
+            width: '100%',
+            padding: '40px',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+            position: 'relative',
+            border: '1px solid #cbd5e1'
+          }}>
+            {/* Botón Cerrar */}
+            <button
+              onClick={() => setSelectedService(null)}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                right: '24px',
+                background: '#f1f5f9',
+                border: 'none',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 600,
+                color: '#0f172a'
+              }}
+            >
+              ✕
+            </button>
+
+            <span style={{ fontSize: '11px', padding: '4px 10px', backgroundColor: '#f1f5f9', borderRadius: '100px', color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block', marginBottom: '16px' }}>
+              {selectedService.category}
+            </span>
+
+            <h3 style={{ fontSize: '26px', fontWeight: 600, color: '#0f172a', margin: '0 0 12px 0' }}>
+              {selectedService.title}
+            </h3>
+
+            <div style={{ display: 'inline-block', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '8px 16px', borderRadius: '12px', marginBottom: '20px' }}>
+              <span style={{ fontSize: '14px', color: '#15803d', fontWeight: 600 }}>
+                ⏱ Tiempo estimado de demora: {selectedService.tiempoDemora}
+              </span>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', margin: '0 0 8px 0' }}>¿Cómo se realiza el trámite?</h4>
+              <p style={{ fontSize: '15px', color: '#475569', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                {selectedService.explicacionAmpliada}
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '32px', border: '1px solid #e2e8f0' }}>
+              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, fontWeight: 300 }}>
+                💡 <strong style={{ fontWeight: 500, color: '#0f172a' }}>Nota legal:</strong> {selectedService.detalle}
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
               <a 
-                href={gmailUrl}
-                target="_blank" 
+                href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(`Hola, quiero iniciar el trámite de: ${selectedService.title}. ¿Cuáles son los requisitos exactos?`)}`}
+                target="_blank"
                 rel="noopener noreferrer"
-                style={{ 
-                  fontSize: '18px', 
-                  fontWeight: '400', 
-                  color: 'var(--text, #eef1ed)', 
-                  textDecoration: 'underline', 
-                  marginTop: '4px', 
-                  display: 'inline-block', 
-                  transition: 'opacity 0.2s ease' 
+                style={{
+                  flex: 1,
+                  backgroundColor: '#0f172a',
+                  color: '#ffffff',
+                  padding: '14px 24px',
+                  borderRadius: '100px',
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  fontSize: '15px',
+                  fontWeight: 500
                 }}
-                onMouseOver={(e) => e.currentTarget.style.opacity = '0.7'}
-                onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
               >
-                amsolutions.studio@gmail.com
+                Iniciar Trámite por WhatsApp →
               </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FOOTER */}
+      <footer id="contacto" style={{ 
+        borderTop: '1px solid #cbd5e1', 
+        backgroundColor: '#f8fafc',
+        padding: '64px 0 32px 0'
+      }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 clamp(24px, 5vw, 48px)', boxSizing: 'border-box' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
+            gap: '48px', 
+            marginBottom: '56px',
+            alignItems: 'stretch'
+          }}>
+            <div style={{ 
+              border: '1px solid #cbd5e1', 
+              borderRadius: '24px', 
+              padding: '40px', 
+              backgroundColor: '#ffffff',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <h3 style={{ fontSize: '24px', fontWeight: 600, margin: '0 0 24px 0', color: '#0f172a' }}>Oficina Córdoba</h3>
+                <p style={{ fontSize: '15px', color: '#334155', margin: '0 0 16px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                  <strong style={{ fontWeight: 600, color: '#0f172a' }}>Dirección:</strong> Calle Linda 123, Ciudad de Córdoba
+                </p>
+                <p style={{ fontSize: '15px', color: '#334155', margin: '0 0 16px 0', fontWeight: 300, lineHeight: 1.5 }}>
+                  <strong style={{ fontWeight: 600, color: '#0f172a' }}>Teléfono:</strong> 1234567890
+                </p>
+                <p style={{ fontSize: '15px', color: '#334155', margin: 0, fontWeight: 300, lineHeight: 1.5 }}>
+                  <strong style={{ fontWeight: 600, color: '#0f172a' }}>Horario:</strong> Lun-Vie 8:30–14:30 | Lun-Jue 15:00–16:30
+                </p>
+              </div>
+
+              <div style={{ marginTop: '32px' }}>
+                <a 
+                  href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera agendar una visita o consulta.")}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    display: 'inline-block',
+                    fontSize: '14px', 
+                    fontWeight: 500, 
+                    backgroundColor: '#0f172a', 
+                    color: '#ffffff', 
+                    padding: '12px 24px', 
+                    borderRadius: '100px', 
+                    textDecoration: 'none'
+                  }}
+                >
+                  Agendar Visita / Consultar
+                </a>
+              </div>
+            </div>
+
+            <div style={{ 
+              border: '1px solid #cbd5e1', 
+              borderRadius: '24px', 
+              overflow: 'hidden', 
+              backgroundColor: '#ffffff',
+              minHeight: '300px',
+              display: 'flex'
+            }}>
+              <iframe 
+                title="Ubicación Oficina Córdoba"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.9999999999995!2d-64.1888!3d-31.4201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI1JzEyLjQiUyA2NMKwMTEnMTkuNyJX!5e0!3m2!1ses!2sar!4v1650000000000!5m2!1ses!2sar" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0, minHeight: '320px', width: '100%' }} 
+                allowFullScreen={false} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade">
+              </iframe>
             </div>
           </div>
 
           <div style={{ 
+            borderTop: '1px solid #cbd5e1', 
+            paddingTop: '32px', 
             display: 'flex', 
             justifyContent: 'space-between', 
-            alignItems: 'center',
-            fontSize: '12px', 
-            color: 'var(--accent, #9ca3af)', 
-            borderTop: '1px solid rgba(255,255,255,0.05)', 
-            paddingTop: '16px',
-            width: '100%'
+            fontSize: '14px', 
+            color: '#64748b', 
+            fontWeight: 300,
+            flexWrap: 'wrap', 
+            gap: '16px' 
           }}>
-            <p style={{ margin: 0 }}>
-              © {new Date().getFullYear()} — Córdoba, Argentina
-              <span style={{ margin: '0 8px' }}>•</span>
-              <a 
-                href="https://www.instagram.com/amsolution.studio/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                style={{ color: 'var(--accent, #9ca3af)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseOver={(e) => e.currentTarget.style.color = 'var(--text, #eef1ed)'}
-                onMouseOut={(e) => e.currentTarget.style.color = 'var(--accent, #9ca3af)'}
-              >
-                Instagram
-              </a>
-            </p>
-            <p style={{ margin: 0 }}>
-              Designed & Crafted by MHMC
-            </p>
+            <p style={{ margin: 0 }}>© {new Date().getFullYear()} GESTOR — Todos los derechos reservados.</p>
+            <p style={{ margin: 0 }}>Córdoba e Interior</p>
           </div>
-        </footer>
-      </main>
+        </div>
+      </footer>
 
-      {/* BOTÓN FLOTANTE */}
-      <button 
-        onClick={scrollToTop}
+      {/* BOTÓN FLOTANTE WHATSAPP */}
+      <a 
+        href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quisiera realizar una consulta.")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Consultar por WhatsApp"
+        aria-label="Consultar por WhatsApp"
         style={{
           position: 'fixed',
-          bottom: '40px',
-          right: '40px',
-          width: '44px',
-          height: '44px',
+          bottom: '32px',
+          right: '32px',
+          width: '56px',
+          height: '56px',
+          backgroundColor: '#0f172a',
+          color: '#ffffff',
           borderRadius: '50%',
-          backgroundColor: 'var(--text, #eef1ed)',
-          color: '#222924',
-          border: 'none',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-          opacity: showScrollTop ? 1 : 0,
-          visibility: showScrollTop ? 'visible' : 'hidden',
-          transform: showScrollTop ? 'translateY(0)' : 'translateY(16px)',
-          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-          fontSize: '18px',
-          fontWeight: '500',
-          zIndex: 99
+          justifyContent: 'center',
+          boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+          textDecoration: 'none',
+          transition: 'transform 0.2s ease, background-color 0.2s ease',
+          zIndex: 1000
         }}
-        title="Volver arriba"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.08)';
+          e.currentTarget.style.backgroundColor = '#25D366';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.backgroundColor = '#0f172a';
+        }}
       >
-        ↑
-      </button>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+        </svg>
+      </a>
+
     </div>
   );
 }
